@@ -1,0 +1,25 @@
+# Git & CI/CD metadata
+.git/
+.github/
+.gitignore
+
+# Agent local governance & docs
+.local-project/
+.agents/
+AGENTS.md
+docs/
+*.md
+*.scratch.*
+
+# Build outputs & IDE files
+target/
+.idea/
+*.iml
+.vscode/
+
+# Environment & local compose files
+.env
+.env.*
+docker-compose*.yml
+Dockerfile
+.dockerignore
