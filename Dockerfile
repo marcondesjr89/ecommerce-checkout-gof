@@ -5,11 +5,12 @@ WORKDIR /workspace
 # Copy Maven descriptors and wrapper first to leverage Docker layer caching
 COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
-RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
+RUN chmod +x mvnw
 
-# Copy source code and package application (tests already run in CI gate)
+# Copy source code and package application using BuildKit Maven cache
+# Tests and JaCoCo coverage are already enforced by the dedicated CI gate
 COPY src/ src/
-RUN ./mvnw clean package -DskipTests -B
+RUN --mount=type=cache,target=/root/.m2 ./mvnw clean package -Dmaven.test.skip=true -Djacoco.skip=true -B
 
 # Stage 2: Minimal hardened runtime
 FROM eclipse-temurin:21-jre-alpine
