@@ -18,6 +18,16 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     private static final String ERROR_BASE_URI = "https://ecommerce-checkout-gof/errors/";
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ProblemDetail handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return buildProblemDetail(
+                HttpStatus.NOT_FOUND,
+                "Recurso Não Encontrado",
+                ex.getMessage(),
+                "resource-not-found"
+        );
+    }
+
     @ExceptionHandler(BusinessException.class)
     public ProblemDetail handleBusinessException(BusinessException ex) {
         return buildProblemDetail(
