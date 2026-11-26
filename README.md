@@ -163,11 +163,12 @@ O relatório HTML de cobertura é gerado em `target/site/jacoco/index.html`.
 
 | Métrica de Qualidade | Resultado Verificado |
 | :--- | :--- |
-| **Suíte Automatizada (JUnit 5 + Mockito + MockMvc + `@DataJpaTest`)** | **34 testes (100% verdes)** |
+| **Suíte Automatizada (JUnit 5 + Mockito + MockMvc + `@DataJpaTest`)** | **39 testes (100% verdes)** |
 | **Cobertura de Classes (JaCoCo)** | **100.0% (31/31)** |
-| **Cobertura de Instruções (JaCoCo)** | **99.4% (1246/1254)** |
-| **Cobertura de Linhas (JaCoCo)** | **99.0% (290/293)** |
-| **Cobertura de Métodos (JaCoCo)** | **98.0% (100/102)** |
+| **Cobertura de Branches (JaCoCo)** | **100.0% (30/30)** |
+| **Cobertura de Instruções (JaCoCo)** | **99.4% (1253/1261)** |
+| **Cobertura de Linhas (JaCoCo)** | **99.0% (291/294)** |
+| **Cobertura de Métodos (JaCoCo)** | **98.1% (101/103)** |
 
 ### Pipeline GitHub Actions
 1. **CI Pipeline (`.github/workflows/ci.yml`)** — executa em `push` e `pull_request` na `main`:

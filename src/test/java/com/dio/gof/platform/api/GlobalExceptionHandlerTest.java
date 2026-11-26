@@ -70,6 +70,18 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("Should return 400 ProblemDetail for malformed JSON payloads")
+    void shouldReturnBadRequestForMalformedJson() throws Exception {
+        mockMvc.perform(post("/test-errors/validation")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\": "))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Requisição Malformada"))
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.timestamp").exists());
+    }
+
+    @Test
     @DisplayName("Should return 500 ProblemDetail without leaking internal exception details")
     void shouldReturnInternalServerErrorWithoutLeakingSensitiveDetails() throws Exception {
         mockMvc.perform(get("/test-errors/unexpected"))

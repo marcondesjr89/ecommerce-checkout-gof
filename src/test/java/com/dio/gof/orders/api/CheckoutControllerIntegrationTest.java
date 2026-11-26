@@ -125,6 +125,50 @@ class CheckoutControllerIntegrationTest {
     }
 
     @Test
+    @DisplayName("POST /api/v1/checkout should return 400 RFC 7807 ProblemDetail for unknown enum value")
+    void shouldReturnBadRequestForInvalidEnumValue() throws Exception {
+        String invalidEnumJson = """
+                {
+                  "customerName": "Rafael Costa",
+                  "customerEmail": "rafael@example.com",
+                  "postalCode": "30130-010",
+                  "shippingMethod": "ECONOMY",
+                  "paymentMethod": "CRYPTO",
+                  "items": [
+                    { "productName": "Mouse", "quantity": 1, "unitPrice": 50.00 }
+                  ]
+                }
+                """;
+
+        mockMvc.perform(post("/api/v1/checkout")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidEnumJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Requisição Malformada"))
+                .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    @DisplayName("POST /api/v1/checkout should return 400 RFC 7807 ProblemDetail for invalid nested OrderItemRequest")
+    void shouldReturnBadRequestForInvalidNestedItem() throws Exception {
+        CheckoutRequest invalidItemRequest = new CheckoutRequest(
+                "Rafael Costa",
+                "rafael@example.com",
+                "30130-010",
+                ShippingMethod.ECONOMY,
+                PaymentMethod.PIX,
+                List.of(new OrderItemRequest("", 0, BigDecimal.ZERO))
+        );
+
+        mockMvc.perform(post("/api/v1/checkout")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidItemRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Dados de Entrada Inválidos"))
+                .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
     @DisplayName("GET /api/v1/orders/{id} should return 404 RFC 7807 ProblemDetail when order does not exist")
     void shouldReturnNotFoundWhenOrderDoesNotExist() throws Exception {
         mockMvc.perform(get("/api/v1/orders/{id}", 999999L))

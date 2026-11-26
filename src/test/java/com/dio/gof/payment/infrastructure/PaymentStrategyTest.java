@@ -63,4 +63,18 @@ class PaymentStrategyTest {
         assertThat(result.finalAmount()).isEqualByComparingTo("150.00");
         assertThat(result.transactionId()).startsWith("BOL-");
     }
+
+    @Test
+    @DisplayName("Should round fractional cents using HALF_UP for PIX and Credit Card")
+    void shouldRoundFractionalCentsUsingHalfUp() {
+        PixPaymentStrategy pixStrategy = new PixPaymentStrategy();
+        PaymentResult pixResult = pixStrategy.process(new BigDecimal("33.33"), "customer@example.com");
+        assertThat(pixResult.discountOrFee()).isEqualByComparingTo("-3.33");
+        assertThat(pixResult.finalAmount()).isEqualByComparingTo("30.00");
+
+        CreditCardPaymentStrategy cardStrategy = new CreditCardPaymentStrategy();
+        PaymentResult cardResult = cardStrategy.process(new BigDecimal("10.20"), "customer@example.com");
+        assertThat(cardResult.discountOrFee()).isEqualByComparingTo("0.26");
+        assertThat(cardResult.finalAmount()).isEqualByComparingTo("10.46");
+    }
 }

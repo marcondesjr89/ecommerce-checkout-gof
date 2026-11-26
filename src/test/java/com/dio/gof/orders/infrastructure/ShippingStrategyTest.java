@@ -50,4 +50,15 @@ class ShippingStrategyTest {
         assertThat(aboveThreshold.cost()).isEqualByComparingTo("0.00");
         assertThat(aboveThreshold.estimatedDeliveryDays()).isEqualTo(5);
     }
+
+    @Test
+    @DisplayName("EconomyShippingStrategy should charge standard 15.00 when subtotal is null")
+    void shouldChargeStandardEconomyCostWhenSubtotalIsNull() {
+        EconomyShippingStrategy strategy = new EconomyShippingStrategy();
+
+        ShippingCalculation result = strategy.calculate(null, "01001-000");
+
+        assertThat(result.cost()).isEqualByComparingTo("15.00");
+        assertThat(result.estimatedDeliveryDays()).isEqualTo(5);
+    }
 }

@@ -171,7 +171,7 @@ class CheckoutFacadeTest {
     }
 
     @Test
-    @DisplayName("Should reject checkout with empty item list")
+    @DisplayName("Should reject null request, null items, or empty item list")
     void shouldRejectCheckoutWithEmptyItems() {
         CheckoutRequest emptyRequest = new CheckoutRequest(
                 "Maria Oliveira",
@@ -181,7 +181,19 @@ class CheckoutFacadeTest {
                 PaymentMethod.PIX,
                 List.of()
         );
+        CheckoutRequest nullItemsRequest = new CheckoutRequest(
+                "Maria Oliveira",
+                "maria@example.com",
+                "01001-000",
+                ShippingMethod.EXPRESS,
+                PaymentMethod.PIX,
+                null
+        );
 
+        assertThatThrownBy(() -> checkoutFacade.processCheckout(null))
+                .isInstanceOf(BusinessException.class);
+        assertThatThrownBy(() -> checkoutFacade.processCheckout(nullItemsRequest))
+                .isInstanceOf(BusinessException.class);
         assertThatThrownBy(() -> checkoutFacade.processCheckout(emptyRequest))
                 .isInstanceOf(BusinessException.class);
 

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -49,6 +50,16 @@ public class GlobalExceptionHandler {
                 "Dados de Entrada Inválidos",
                 detail,
                 "validation-error"
+        );
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ProblemDetail handleMessageNotReadableException(HttpMessageNotReadableException ex) {
+        return buildProblemDetail(
+                HttpStatus.BAD_REQUEST,
+                "Requisição Malformada",
+                "O corpo da requisição contém JSON inválido ou valores não suportados.",
+                "malformed-request"
         );
     }
 

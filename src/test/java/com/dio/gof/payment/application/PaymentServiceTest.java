@@ -59,8 +59,11 @@ class PaymentServiceTest {
     }
 
     @Test
-    @DisplayName("Should reject blank customer email")
+    @DisplayName("Should reject null or blank customer email")
     void shouldRejectBlankCustomerEmail() {
+        assertThatThrownBy(() -> paymentService.executePayment(PaymentMethod.BOLETO, new BigDecimal("50.00"), null))
+                .isInstanceOf(BusinessException.class);
+
         assertThatThrownBy(() -> paymentService.executePayment(PaymentMethod.BOLETO, new BigDecimal("50.00"), "  "))
                 .isInstanceOf(BusinessException.class);
     }
